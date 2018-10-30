@@ -6,9 +6,9 @@ const zoomSensitivity = 0.3;
 const rotateSensitivity = 0.008;
 
 let events = {};
-let temp = {};
+let temp: any = {};
 
-const eventsObject = document.querySelector(".itemImage__img");
+const eventsObject: any = document.querySelector(".itemImage__img");
 
 function init() {
   eventsObject.addEventListener("pointerdown", handleStart, false);
@@ -19,15 +19,15 @@ function init() {
 
 window.addEventListener(
   "load",
-  function() {
+  () => {
     // В гайде через setTimeout чинили какой-то фикс загрузки
     setTimeout(init, 100);
   },
-  false
+  false,
 );
 
 function handleStart(e) {
-  const onePointer = (events[e.pointerId] = {});
+  const onePointer: any = (events[e.pointerId] = {});
 
   onePointer.deltaX = 0;
   onePointer.deltaY = 0;
@@ -36,7 +36,7 @@ function handleStart(e) {
 }
 
 function handleMove(e) {
-  if (!events[e.pointerId]) return;
+  if (!events[e.pointerId]) { return; }
 
   switch (Object.keys(events).length) {
     case 1:
@@ -51,7 +51,7 @@ function handleMove(e) {
 function handleEnd(e) {
   delete events[e.pointerId];
 
-  if (e.isPrimary) temp = {};
+  if (e.isPrimary) { temp = {}; }
 }
 
 // Horizontal one finger scroll
@@ -69,8 +69,9 @@ function handleScroll(e) {
   if (
     Math.abs(events[id].deltaX) < deltaPxBeforeScroll &&
     !events[id].freeToScroll
-  )
+  ) {
     return;
+  }
 
   if (!events[id].freeToScroll) {
     events[id].deltaX = parseFloat(eventsObject.style.backgroundPositionX) || 0;
@@ -86,35 +87,36 @@ function handleTwoPointers(e) {
       firstPointerCoordinates: {},
       secondPointerCoordinates: {},
       prevFirstPointerCoordinates: {},
-      prevSecondPointerCoordinates: {},
       prevPointersDist: 0,
+      prevSecondPointerCoordinates: {},
       initialDist: 0,
       freeToPinch: false,
       freeToRotate: false,
       prevAngle: 0,
-      initialAngle: 0
+      initialAngle: 0,
     };
   }
 
   e.isPrimary
     ? (temp.firstPointerCoordinates = {
         x: e.clientX,
-        y: e.clientY
+        y: e.clientY,
       })
     : (temp.secondPointerCoordinates = {
         x: e.clientX,
-        y: e.clientY
+        y: e.clientY,
       });
 
-  if (!temp.firstPointerCoordinates.x || !temp.secondPointerCoordinates.x)
+  if (!temp.firstPointerCoordinates.x || !temp.secondPointerCoordinates.x) {
     return;
+  }
 
   pinchIndicate();
   rotateIndicate();
 }
 
 function rotateIndicate() {
-    if (temp.freeToPinch) return;
+    if (temp.freeToPinch) { return; }
 
     if (!Object.keys(temp.prevFirstPointerCoordinates).length) {
       temp.prevFirstPointerCoordinates = temp.firstPointerCoordinates;
@@ -126,20 +128,19 @@ function rotateIndicate() {
     const yDiff =
       temp.firstPointerCoordinates.y - temp.prevSecondPointerCoordinates.y;
 
-    var rad2deg = 180 / Math.PI;
-    var angle = Math.atan(Math.abs(xDiff) / Math.abs(yDiff)) * rad2deg;
+    const rad2deg = 180 / Math.PI;
+    const angle = Math.atan(Math.abs(xDiff) / Math.abs(yDiff)) * rad2deg;
 
-    if (!temp.initialAngle) temp.initialAngle = angle;
+    if (!temp.initialAngle) { temp.initialAngle = angle; }
 
     const diff = temp.prevAngle - angle;
     temp.prevAngle = angle;
 
-    const absoluteDiff = temp.initialAngle - angle;
+    const absoluteDiff: number = temp.initialAngle - angle;
 
-    console.log(temp.initialAngle);
-
-    if (Math.abs(absoluteDiff) < deltaPxBeforeRotate && !temp.freeToRotate)
+    if (Math.abs(absoluteDiff) < deltaPxBeforeRotate && !temp.freeToRotate) {
       return;
+    }
 
     if (!temp.freeToRotate) {
       temp.freeToRotate = true;
@@ -149,7 +150,7 @@ function rotateIndicate() {
 }
 
 function pinchIndicate() {
-  if (temp.freeToRotate) return;
+  if (temp.freeToRotate) { return; }
 
   const xDiff =
     temp.firstPointerCoordinates.x - temp.secondPointerCoordinates.x;
@@ -157,7 +158,7 @@ function pinchIndicate() {
     temp.firstPointerCoordinates.y - temp.secondPointerCoordinates.y;
 
   const distBetweenPointers = Math.sqrt(
-    Math.pow(xDiff, 2) + Math.pow(yDiff, 2)
+    Math.pow(xDiff, 2) + Math.pow(yDiff, 2),
   );
 
   if (!temp.prevPointersDist) {
@@ -171,7 +172,7 @@ function pinchIndicate() {
 
   absoluteDiff = temp.initialDist - distBetweenPointers;
 
-  if (Math.abs(absoluteDiff) < deltaDegBeforePinch && !temp.freeToPinch) return;
+  if (Math.abs(absoluteDiff) < deltaDegBeforePinch && !temp.freeToPinch) { return; }
 
   if (!temp.freeToPinch) {
     temp.freeToPinch = true;

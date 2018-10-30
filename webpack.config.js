@@ -6,7 +6,7 @@ module.exports = {
   mode: "development",
   entry: {
     app: "./src/main.js",
-    cameras: "./src/pages/cameras/index.js"
+    cameras: "./src/pages/cameras/index.ts"
   },
   output: {
     filename: "./dist/[name].bundle.js"
@@ -19,6 +19,11 @@ module.exports = {
         use: {
           loader: "babel-loader"
         }
+      },
+      {
+        test: /\.ts?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/
       },
       {
         test: /\.(pug|jade)$/,
