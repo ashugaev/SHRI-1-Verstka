@@ -1,12 +1,12 @@
-export function setControllers(video) {
+export function setControllers(video: any) {
   const brightnessController = video.parentNode.parentNode.querySelector(
-    ".brightnessController"
+    ".brightnessController",
   );
   const contrastController = video.parentNode.parentNode.querySelector(
-    ".contrastController"
+    ".contrastController",
   );
 
-  brightnessController.oninput = e => {
+  brightnessController.oninput = (e: any) => {
     const currentFilters = video.style.filter;
     const val = e.target.value;
 
@@ -18,7 +18,7 @@ export function setControllers(video) {
     }
   };
 
-  contrastController.oninput = e => {
+  contrastController.oninput = (e: any) => {
     const currentFilters = video.style.filter;
     const val = e.target.value;
 

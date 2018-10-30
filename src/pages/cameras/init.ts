@@ -2,24 +2,24 @@ export function createVideoNodes(urls) {
   const videoNode = document.querySelector("template");
 
   urls.forEach((video, i) => {
-    var clon = videoNode.content.cloneNode(true);
+    const clon: any = videoNode.content.cloneNode(true);
     clon.querySelector(".camerasVideo").id = `video-${i}`;
     // clon.querySelector(".canvasVideo").id = `canvas-${i}`;
     document.querySelector(".videosBox").appendChild(clon);
   });
 }
 
-export function startVideo(video, url) {
+export function startVideo(video, url): any {
   if (Hls.isSupported()) {
-    var hls = new Hls();
+    const hls: any = new Hls();
     hls.loadSource(url);
     hls.attachMedia(video);
-    hls.on(Hls.Events.MANIFEST_PARSED, function() {
+    hls.on(Hls.Events.MANIFEST_PARSED, () => {
       video.play();
     });
   } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
     video.src = "https://video-dev.github.io/streams/x36xhzz/x36xhzz.m3u8";
-    video.addEventListener("loadedmetadata", function() {
+    video.addEventListener("loadedmetadata", () => {
       video.play();
     });
   }

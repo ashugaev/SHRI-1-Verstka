@@ -6,25 +6,36 @@ export function initPopup() {
 }
 
 // Переменные, которые будут нужны для закрытия Popup
-let targetPageTop, targetPageLeft, targetHeight, targetWidth;
+let targetPageTop: number;
+let targetPageLeft: number;
+let targetHeight: number;
+let targetWidth: number;
 
 const popupClassName = ".one-more-video-box";
 const popUpOpenClass = "absolute-positioned-video";
-const bgSelector = document.querySelector(".dark-bg");
+const bgSelector: any = document.querySelector(".dark-bg");
 
+let camerasVideoEl;
+let bodyEl;
+let eventTarget: any;
 function addCloseEvent() {
-  document.querySelector("body").addEventListener("mouseup", function(event) {
-    if (event.target.classList.contains("videoControllers__closeBtn")) {
-      closePopup(event.target.closest(popupClassName));
-    }
+
+  bodyEl = document.querySelector("body") as HTMLBodyElement;
+
+  bodyEl.addEventListener("mouseup", (event): void => {
+    eventTarget = event.target as EventTarget;
+    if (eventTarget.classList.contains("videoControllers__closeBtn")) {  newFunction(); }
   });
+
+  function newFunction() {
+    closePopup(eventTarget.closest(popupClassName));
+  }
 }
 
 function addOpenEvent() {
-  document.querySelectorAll(popupClassName).forEach(el => {
-    el.querySelector(".camerasVideo").addEventListener("click", function(
-      event
-    ) {
+  document.querySelectorAll(popupClassName).forEach((el): void => {
+    camerasVideoEl = el.querySelector(".camerasVideo") as HTMLVideoElement;
+    camerasVideoEl.addEventListener("click", (event): void => {
       if (event.button === 0) {
         openPopup(el);
       }
@@ -32,7 +43,7 @@ function addOpenEvent() {
   });
 }
 
-function openPopup(elem) {
+function openPopup(elem: any) {
   disableScrolling();
   // Текущая позиция и размеры элемента
   targetPageTop = elem.getBoundingClientRect().top + window.pageYOffset;
@@ -52,13 +63,13 @@ function openPopup(elem) {
 
   bgSelector.style.display = "block";
   // Задержка, что бы не было скачка, перехода на абсолют
-  setTimeout(function() {
+  setTimeout(() => {
     elem.classList.add(popUpOpenClass);
     bgSelector.style.opacity = 1;
   }, 50);
 }
 
-function closePopup(popup) {
+function closePopup(popup: any) {
   bgSelector.style.opacity = 0;
   popup.classList.remove("absolute-positioned-video");
 
